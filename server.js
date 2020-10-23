@@ -10,19 +10,19 @@ app.use(logger("dev"));
 
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/dbExample", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModigy: false,
 });
 
 app.use(express.static("public"));
 
-//API routes
+/*API routes
 POST /api/workouts
 PUT /api/workouts/:id
-GET /api/workouts/range (last 7 days: think limit)
-
+GET /api/workouts/range (last 7 days: think limit)*/
 
 //HTML routes
 app.get("/", (req, res) => {
@@ -40,7 +40,6 @@ app.get("/stats", (req, res) => {
 app.listen(PORT, () => {
   console.log("App is running on http://localhost:${PORT}!");
 });
-
 
 //make a post route on workouts so that it makes a new workout in the database. post api/workouts
 
