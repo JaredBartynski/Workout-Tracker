@@ -15,51 +15,52 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-  useFindAndModigy: false,
+  useFindAndModify: false,
 });
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //API routes
-module.exports = (app) => {
-  app.get("/api/workouts", (req, res) => {
-    db.Workout.find()
-      .then((data) => {
-        res.json(data);
-      })
-      .catch((err) => {
-        res.json(err);
-      });
-  });
 
-  app.post("/api/workouts", (req, res) => {
-    db.Workout.create({})
-      .then((data) => res.json(data))
-      .catch((err) => {
-        res.json(err);
-      });
-  });
+app.get("/api/workouts", (req, res) => {
+  db.Workout.find()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
-  app.put("/api/workouts/:id", ({ body, params }, res) => {
-    db.Workout.findByIdAndUpdate(
-      params.id,
-      { $push: { exercises: body } },
-      { new: true, runValidators: true }
-    )
-      .then((data) => res.json(data))
-      .catch((err) => {
-        res.json(err);
-      });
-  });
+app.post("/api/workouts", (req, res) => {
+  db.Workout.create({})
+    .then((data) => res.json(data))
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
-  app.get("/api/workouts/range", (req, res) => {
-    db.Workout.create({})
-      .then((data) => res.json(data))
-      .catch((err) => {
-        res.json(err);
-      });
-  });
-};
+app.put("/api/workouts/:id", ({ body, params }, res) => {
+  db.Workout.findByIdAndUpdate(
+    params.id,
+    { $push: { exercises: body } },
+    { new: true, runValidators: true }
+  )
+    .then((data) => res.json(data))
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.get("/api/workouts/range", (req, res) => {
+  db.Workout.create({})
+    .then((data) => res.json(data))
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
 //HTML routes
 app.get("/", (req, res) => {
