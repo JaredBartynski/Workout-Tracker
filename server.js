@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const logger = require("morgan");
 const { deflateSync } = require("zlib");
+const Workout = require("./models/workout");
 
 const app = express();
 
@@ -19,10 +20,46 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 
 app.use(express.static("public"));
 
-/*API routes
-POST /api/workouts
-PUT /api/workouts/:id
-GET /api/workouts/range (last 7 days: think limit)*/
+//API routes
+module.exports = (app) => {
+  app.get("/api/workouts", (req, res) => {
+    db.Workout.find()
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
+  });
+
+  app.post("/api/workouts", (req, res) => {
+    db.Workout.create({})
+      .then((data) => res.json(data))
+      .catch((err) => {
+        res.json(err);
+      });
+  });
+
+  app.put("/api/workouts/:id", ({ body, params }, res) => {
+    db.Workout.findByIdAndUpdate(
+      params.id,
+      { $push: { exercises: body } },
+      { new: true, runValidators: true }
+    )
+      .then((data) => res.json(data))
+      .catch((err) => {
+        res.json(err);
+      });
+  });
+
+  app.get("/api/workouts/range", (req, res) => {
+    db.Workout.create({})
+      .then((data) => res.json(data))
+      .catch((err) => {
+        res.json(err);
+      });
+  });
+};
 
 //HTML routes
 app.get("/", (req, res) => {
@@ -40,11 +77,3 @@ app.get("/stats", (req, res) => {
 app.listen(PORT, () => {
   console.log("App is running on http://localhost:${PORT}!");
 });
-
-//make a post route on workouts so that it makes a new workout in the database. post api/workouts
-
-//make a put route so that I can update workouts or exercises. some sort of id on undefined. put/api/workouts/undefined
-
-//get route on api/workouts/range
-
-// there might be a delete step
