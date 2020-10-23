@@ -25,7 +25,7 @@ app.use(express.json());
 //API routes
 
 app.get("/api/workouts", (req, res) => {
-  db.Workout.find()
+  Workout.find({})
     .then((data) => {
       res.json(data);
     })
@@ -35,19 +35,17 @@ app.get("/api/workouts", (req, res) => {
 });
 
 app.post("/api/workouts", (req, res) => {
-  db.Workout.create({})
+  Workout.create({})
     .then((data) => res.json(data))
     .catch((err) => {
       res.json(err);
     });
 });
 
-app.put("/api/workouts/:id", ({ body, params }, res) => {
-  db.Workout.findByIdAndUpdate(
-    params.id,
-    { $push: { exercises: body } },
-    { new: true, runValidators: true }
-  )
+app.put("/api/workouts/:id", (req, res) => {
+  Workout.findByIdAndUpdate(req.params.id, {
+    $push: { exercises: req.body },
+  })
     .then((data) => res.json(data))
     .catch((err) => {
       res.json(err);
@@ -55,7 +53,7 @@ app.put("/api/workouts/:id", ({ body, params }, res) => {
 });
 
 app.get("/api/workouts/range", (req, res) => {
-  db.Workout.create({})
+  Workout.find({})
     .then((data) => res.json(data))
     .catch((err) => {
       res.json(err);
