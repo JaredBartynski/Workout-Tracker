@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const logger = require("morgan");
+const { deflateSync } = require("zlib");
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(express.static("public"));
 //API routes
 POST /api/workouts
 PUT /api/workouts/:id
-GET /api/workouts/range
+GET /api/workouts/range (last 7 days: think limit)
 
 
 //HTML routes
